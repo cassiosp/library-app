@@ -132,4 +132,7 @@
 		</dependency>
 	</dependencies>
 
+	<modules>
+		<module>library-module</module>
+	</modules>
 </project>
