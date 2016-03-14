@@ -13,8 +13,11 @@ public class CategoryRepository {
         return category;
     }
 
-    public Category findById(Long categoryAddedId) {
-        return em.find(Category.class, categoryAddedId);
+    public Category findById(Long id) {
+        if (id == null) {
+            return null;
+        }
+        return em.find(Category.class, id);
     }
 
 }
