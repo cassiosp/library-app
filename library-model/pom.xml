@@ -6,7 +6,7 @@
 		<artifactId>library-app</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>library-module</artifactId>
+	<artifactId>library-model</artifactId>
 
 	<build>
 		<plugins>
