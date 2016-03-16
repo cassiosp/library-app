@@ -10,7 +10,8 @@ public final class OperationResultJsonWriter {
 
     public static String toJson(OperationResult operationResult) {
         if (operationResult.getEntity() == null) {
-            return "";
+            final Gson gson = new Gson();
+            return gson.toJson(operationResult);
         }
 
         final Gson gson = new Gson();
