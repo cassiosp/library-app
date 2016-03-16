@@ -1,5 +1,6 @@
 package com.library.app.commontests.utils;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -16,9 +17,18 @@ public class JsonTestUtils {
     }
 
     public static String readJsonFile(final String relativePath) {
-        final InputStream is = JsonTestUtils.class.getClassLoader().getResourceAsStream(BASE_JSON_DIR + relativePath);
-        try (Scanner s = new Scanner(is)) {
+        Scanner s = null;
+
+        try (InputStream is = new FileInputStream(JsonTestUtils.class.getClassLoader().getResource(".").getPath()
+                + BASE_JSON_DIR + relativePath)) {
+            s = new Scanner(is);
             return s.useDelimiter("\\A").hasNext() ? s.next() : "";
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (s != null) {
+                s.close();
+            }
         }
     }
 
