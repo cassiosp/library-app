@@ -5,7 +5,7 @@ import org.junit.Ignore;
 @Ignore
 public class FileTestNameUtils {
 
-    private static final String PATH_REQUEST = "/resquest/";
+    private static final String PATH_REQUEST = "/request/";
     private static final String PATH_RESPONSE = "/response/";
 
     public FileTestNameUtils() {
