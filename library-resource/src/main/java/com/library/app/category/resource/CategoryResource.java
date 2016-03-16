@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.library.app.category.expetion.CategoryExistentException;
+import com.library.app.category.expetion.CategoryNotFoundException;
 import com.library.app.category.model.Category;
 import com.library.app.category.services.CategoryServices;
 import com.library.app.common.HttpCode;
@@ -47,6 +48,35 @@ public class CategoryResource {
         }
 
         logger.debug("Returning the operation result after adding category: {}", result);
+        return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
+    }
+
+    public Response update(Long id, String body) {
+        logger.debug("Updating a new category with body {}", body);
+        final Category category = categoryJsonConverter.convertFrom(body);
+        category.setId(id);
+
+        OperationResult result = null;
+        HttpCode httpCode = HttpCode.OK;
+
+        try {
+            categoryServices.update(category);
+            result = OperationResult.success();
+        } catch (final CategoryNotFoundException e) {
+            logger.error("No category found for the given id", e);
+            httpCode = HttpCode.NOT_FOUND;
+            result = StandardsOperationResults.getOperationResultNotFound(RESOURCE_MESSAGE);
+        } catch (final FieldNotValidException e) {
+            logger.error("One of the fields of the category is not valid", e);
+            httpCode = HttpCode.VALIDATION_ERROR;
+            result = StandardsOperationResults.getOperationResultInvalidField(RESOURCE_MESSAGE, e);
+        } catch (final CategoryExistentException e) {
+            logger.error("There is already a category for the given name", e);
+            httpCode = HttpCode.VALIDATION_ERROR;
+            result = StandardsOperationResults.getOperationResultExistent(RESOURCE_MESSAGE, "name");
+        }
+
+        logger.debug("Returning the operation result after updating category: {}", result);
         return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
     }
 }

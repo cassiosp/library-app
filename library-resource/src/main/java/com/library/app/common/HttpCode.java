@@ -2,8 +2,10 @@ package com.library.app.common;
 
 public enum HttpCode {
 
+    OK(200),
     CREATED(201),
-    VALIDATION_ERROR(422);
+    VALIDATION_ERROR(422),
+    NOT_FOUND(404);
 
     private int code;
 
