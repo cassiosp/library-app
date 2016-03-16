@@ -109,6 +109,24 @@ public class CategoryResourceUTest {
         assertJsonResponseWithFile(response, "categoryNotFound.json");
     }
 
+    @Test
+    public void findCategory() {
+        when(categoryServices.findById(1L)).thenReturn(categoryWithId(java(), 1L));
+
+        final Response response = categoryResource.findById(1L);
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
+        assertJsonResponseWithFile(response, "categoryFound.json");
+    }
+
+    @Test
+    public void findNotFoundCategory() {
+        when(categoryServices.findById(1L)).thenThrow(new CategoryNotFoundException());
+
+        final Response response = categoryResource.findById(1L);
+        assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
+        assertJsonResponseWithFile(response, "categoryNotFound.json");
+    }
+
     private void assertJsonResponseWithFile(Response response, String fileName) {
         assertJsonMatchesFileContent(response.getEntity().toString(), getPathFileResponse(PATH_RESOURCE, fileName));
     }

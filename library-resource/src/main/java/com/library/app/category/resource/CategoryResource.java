@@ -79,4 +79,22 @@ public class CategoryResource {
         logger.debug("Returning the operation result after updating category: {}", result);
         return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
     }
+
+    public Response findById(Long id) {
+        logger.debug("Find category: {}", id);
+        OperationResult result = null;
+        HttpCode httpCode = HttpCode.OK;
+
+        try {
+            final Category category = categoryServices.findById(id);
+            result = OperationResult.success(categoryJsonConverter.convertToJsonElement(category));
+            logger.debug("Category found: {}", category);
+        } catch (final Exception e) {
+            logger.error("No category found for id {}", id);
+            result = StandardsOperationResults.getOperationResultNotFound(RESOURCE_MESSAGE);
+            httpCode = HttpCode.NOT_FOUND;
+        }
+
+        return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
+    }
 }
