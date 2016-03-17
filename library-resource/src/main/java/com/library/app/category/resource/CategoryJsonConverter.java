@@ -1,5 +1,8 @@
 package com.library.app.category.resource;
 
+import java.util.List;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.library.app.category.model.Category;
@@ -21,6 +24,16 @@ public class CategoryJsonConverter {
         jsonObject.addProperty("id", category.getId());
         jsonObject.addProperty("name", category.getName());
         return jsonObject;
+    }
+
+    public JsonElement convertToJsonElement(List<Category> categories) {
+        final JsonArray jsonArray = new JsonArray();
+
+        categories.forEach((category) -> {
+            jsonArray.add(convertToJsonElement(category));
+        });
+
+        return jsonArray;
     }
 
 }

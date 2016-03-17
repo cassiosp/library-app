@@ -1,10 +1,14 @@
 package com.library.app.category.resource;
 
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.library.app.category.expetion.CategoryExistentException;
 import com.library.app.category.expetion.CategoryNotFoundException;
 import com.library.app.category.model.Category;
@@ -96,5 +100,28 @@ public class CategoryResource {
         }
 
         return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
+    }
+
+    public Response findAll() {
+        logger.debug("Find all categories");
+
+        final List<Category> categories = categoryServices.findAll();
+
+        final JsonElement jsonWithPagingAndEntries = getJsonWithPagingAndEntries(categories);
+
+        return Response.status(HttpCode.OK.getCode())
+                .entity(OperationResultJsonWriter.toJson(OperationResult.success(jsonWithPagingAndEntries))).build();
+    }
+
+    private JsonElement getJsonWithPagingAndEntries(List<Category> categories) {
+        final JsonObject jsonWithPagingAndEntries = new JsonObject();
+
+        final JsonObject jsonPaging = new JsonObject();
+        jsonPaging.addProperty("totalRecords", categories.size());
+
+        jsonWithPagingAndEntries.add("paging", jsonPaging);
+        jsonWithPagingAndEntries.add("entries", categoryJsonConverter.convertToJsonElement(categories));
+
+        return jsonWithPagingAndEntries;
     }
 }

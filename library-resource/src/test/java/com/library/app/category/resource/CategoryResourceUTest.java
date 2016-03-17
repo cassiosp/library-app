@@ -7,6 +7,9 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.ws.rs.core.Response;
 
 import org.junit.Before;
@@ -125,6 +128,25 @@ public class CategoryResourceUTest {
         final Response response = categoryResource.findById(1L);
         assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
         assertJsonResponseWithFile(response, "categoryNotFound.json");
+    }
+
+    @Test
+    public void findAllNoCategories() {
+        when(categoryServices.findAll()).thenReturn(new ArrayList<Category>());
+
+        final Response response = categoryResource.findAll();
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
+        assertJsonResponseWithFile(response, "emptyListOfCategories.json");
+    }
+
+    @Test
+    public void findAllTwoCategories() {
+        when(categoryServices.findAll()).thenReturn(Arrays.asList(categoryWithId(java(), 1L),
+                categoryWithId(networks(), 2L)));
+
+        final Response response = categoryResource.findAll();
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
+        assertJsonResponseWithFile(response, "twoCategories.json");
     }
 
     private void assertJsonResponseWithFile(Response response, String fileName) {
