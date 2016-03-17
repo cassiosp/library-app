@@ -9,6 +9,9 @@ import org.junit.Ignore;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
+import com.google.gson.JsonObject;
+import com.library.app.common.json.JsonReader;
+
 @Ignore
 public class JsonTestUtils {
     public static final String BASE_JSON_DIR = "json/";
@@ -42,6 +45,11 @@ public class JsonTestUtils {
 
     public static void assertJsonMatchesFileContent(String actualJson, String fileNameWithExpectedJson) {
         assertJsonMatchesExpectedJson(actualJson, readJsonFile(fileNameWithExpectedJson));
+    }
+
+    public static Long getIdFromJson(String json) {
+        final JsonObject jsonObject = JsonReader.readAsJsonObject(json);
+        return JsonReader.getLongOrNull(jsonObject, "id");
     }
 
 }
