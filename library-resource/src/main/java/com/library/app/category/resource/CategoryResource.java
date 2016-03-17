@@ -2,6 +2,15 @@ package com.library.app.category.resource;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
@@ -21,16 +30,22 @@ import com.library.app.common.model.OperationResult;
 import com.library.app.common.model.ResourceMessage;
 import com.library.app.common.model.StandardsOperationResults;
 
+@Path("/categories")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class CategoryResource {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final ResourceMessage RESOURCE_MESSAGE = new ResourceMessage("category");
 
+    @Inject
     CategoryServices categoryServices;
 
+    @Inject
     CategoryJsonConverter categoryJsonConverter;
 
+    @POST
     public Response add(String body) {
         logger.debug("Adding a new category with body {}", body);
         Category category = categoryJsonConverter.convertFrom(body);
@@ -55,7 +70,9 @@ public class CategoryResource {
         return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
     }
 
-    public Response update(Long id, String body) {
+    @PUT
+    @Path("/{id}")
+    public Response update(@PathParam("id") Long id, String body) {
         logger.debug("Updating a new category with body {}", body);
         final Category category = categoryJsonConverter.convertFrom(body);
         category.setId(id);
@@ -84,7 +101,9 @@ public class CategoryResource {
         return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
     }
 
-    public Response findById(Long id) {
+    @GET
+    @Path("/{id}")
+    public Response findById(@PathParam("id") Long id) {
         logger.debug("Find category: {}", id);
         OperationResult result = null;
         HttpCode httpCode = HttpCode.OK;
@@ -102,6 +121,7 @@ public class CategoryResource {
         return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
     }
 
+    @GET
     public Response findAll() {
         logger.debug("Find all categories");
 

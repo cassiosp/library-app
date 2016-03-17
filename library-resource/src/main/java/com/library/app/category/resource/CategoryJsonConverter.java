@@ -2,12 +2,15 @@ package com.library.app.category.resource;
 
 import java.util.List;
 
+import javax.enterprise.context.ApplicationScoped;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.library.app.category.model.Category;
 import com.library.app.common.json.JsonReader;
 
+@ApplicationScoped
 public class CategoryJsonConverter {
 
     public Category convertFrom(String json) {
