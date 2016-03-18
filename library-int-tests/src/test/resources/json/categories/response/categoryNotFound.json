@@ -1,0 +1,5 @@
+{
+    "success": false,
+    "errorIdentification": "category.NotFound",
+    "errorDescription": "category not found"
+}
